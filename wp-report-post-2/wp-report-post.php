@@ -362,15 +362,16 @@ jQuery(document).ready(function($)
     {
         global $wpdb;
         $json = array('errmsg'=>'', 'msg'=>'');
+        $post_id = intval($_POST['post_id']);
         if ($_POST['subaction'] == 'unpublish-post' && current_user_can('edit_others_posts'))
         {
-            $post = get_post($_POST['post_id']);
+            $post = get_post($post_id);
             $json['post_id'] = 0;
             if ($post)
             {
                 $new_status = ($post->post_status == 'publish') ? 'draft' : 'publish';
                 $args = array(
-                    'ID' => $_POST['post_id'],
+                    'ID' => $post_id,
                     'post_status' => $new_status
                 );
                 ob_start();
@@ -385,14 +386,18 @@ jQuery(document).ready(function($)
         //
         if ($_POST['subaction'] == 'report-post')
         {
-            $post = get_post($_POST['report_post_id']);
+            $report_post_id = intval($_POST['report_post_id']);
+            $reporter_email = sanitize_email($_POST['report_post_email']);
+            $reporter_name = sanitize_text_field($_POST['report_post_name']);
+            $reporter_msg = sanitize_text_field($_POST['report_post_msg']);
+            $post = get_post($report_post_id);
             if (!$post)
             {
                 echo json_encode(array('errmsg'=>$this->get_option('text_post_doesnt_exist', $this->defaults['text_post_doesnt_exist']), 'field'=>''));
                 die();
             }
             $json['post'] = $post;
-            if (!filter_var($_POST['report_post_email'], FILTER_VALIDATE_EMAIL) === false)
+            if (!filter_var($reporter_email, FILTER_VALIDATE_EMAIL) === false)
             {
                 //
             }
@@ -401,23 +406,23 @@ jQuery(document).ready(function($)
                 echo json_encode(array('errmsg'=>$this->get_option('text_email_invalid', $this->defaults['text_email_invalid']), 'field'=>'report_post_email'));
                 die();
             }
-            if (strlen($_POST['report_post_name'])<2)
+            if (strlen($reporter_name)<2)
             {
                 echo json_encode(array('errmsg'=>$this->get_option('text_name_invalid', $this->defaults['text_name_invalid']), 'field'=>'report_post_name'));
                 die();
             }
-            if (strlen($_POST['report_post_msg'])<16)
+            if (strlen($reporter_msg)<16)
             {
                 echo json_encode(array('errmsg'=>$this->get_option('text_msg_invalid', $this->defaults['text_msg_invalid']), 'field'=>'report_post_msg'));
                 die();
             }
-            $data = array('user_id'=>get_current_user_id(), 'email'=>$_POST['report_post_email'], 'name'=>$_POST['report_post_name'], 'msg'=>$_POST['report_post_msg'], 'post_id'=>$_POST['report_post_id']);
-            $reports = get_post_meta($_POST['report_post_id'], '_wp_report_post', true);
+            $data = array('user_id'=>get_current_user_id(), 'email'=>$reporter_email, 'name'=>$reporter_name, 'msg'=>$reporter_msg, 'post_id'=>$report_post_id);
+            $reports = get_post_meta($report_post_id, '_wp_report_post', true);
             if (is_array($reports))
             {
                 foreach ($reports as $report)
                 {
-                    if ($report['email'] == $_POST['report_post_email'])
+                    if ($report['email'] == $reporter_email)
                     {
                         echo json_encode(array('errmsg'=>$this->get_option('text_already_reported', $this->defaults['text_already_reported']), 'field'=>'report_post_msg'));
                         die();
@@ -430,7 +435,7 @@ jQuery(document).ready(function($)
                 $reports = array();
                 $reports[] = $data;
             }
-            $meta_id = update_post_meta($_POST['report_post_id'], '_wp_report_post', $reports);
+            $meta_id = update_post_meta($report_post_id, '_wp_report_post', $reports);
             if ($meta_id)
             {
                 echo json_encode(array('msg'=>$this->get_option('text_success', $this->defaults['text_success']), 'field'=>'', 'meta_id'=>$meta_id, 'reports'=>$reports));
@@ -444,7 +449,6 @@ jQuery(document).ready(function($)
         }
         if ($_POST['subaction'] == 'get-post')
         {
-            $post_id = intval($_POST['post_id']);
             $post = get_post($post_id);
             $json['post_title'] = $post->post_title;
             $json['post'] = $post;
@@ -682,13 +686,14 @@ class WP_Report_Post_List extends WP_List_Table
     {
         if (current_user_can('edit_others_posts'))
         {
-            if (is_array($_GET['post_id']))
+            $unsafe_post_id = $_GET['post_id'];
+            if (is_array($unsafe_post_id))
             {
-                $ids = $_GET['post_id'];
+                $ids = array_map('intval', $unsafe_post_id);;
             }
             else
             {
-                $ids = array($_GET['post_id']);
+                $ids = array(intval($unsafe_post_id));
             }
             foreach ($ids as $id)
             {
