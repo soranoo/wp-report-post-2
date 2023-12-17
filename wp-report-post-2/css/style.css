@@ -2,16 +2,38 @@
 WP Report Post: Styles
 */
 
+#report-post-modal-title {
+  clear: none;
+  margin: 0 0 20px;
+  border-bottom: 3px solid #444;
+  padding-bottom: 10px;
+  color: #eee;
+  text-align: left;
+}
+
+.remodal label {
+  display: block;
+  font-size: .875em;
+  margin-bottom: 5px;
+  color: #ccc;
+}
+
 /* Report Post link */
 .report-post-link {
-display:inline-block;
-background-image:url(../images/warning.png);
-background-repeat:no-repeat;
-background-position:left center;
-margin-left:20px;
-margin-right:20px;
-padding-left:20px;
-vertical-align:middle;
+  display: inline-block;
+  background-image: url(../images/warning.png);
+  background-repeat: no-repeat;
+  background-position: left center;
+  margin-left: 20px;
+  margin-right: 20px;
+  padding-left: 20px;
+  vertical-align: middle;
+}
+
+#report-post-buttons {
+  display: flex;
+  justify-content: end;
+  gap: 1rem;
 }
 
 /* Report Post button */
@@ -35,115 +57,158 @@ vertical-align:middle;
 .report-post-button:hover,
 .report-post-button:focus {
   background: #ef5350;
-  color:yellow;
+  color: yellow;
 }
 
 .report-post-form {
-text-align:left;
+  text-align: left;
 }
 .report-post-form p {
-margin-bottom:0;
-padding-bottom:5px;
-margin-top:16px;
+  margin-bottom: 0;
+  padding-bottom: 5px;
+}
+.report-post-form label {
+  display: block;
+  font-size: .875em;
+  margin-top: 16px;
+  margin-bottom: 5px;
+  color: #ccc;
 }
 .report-post-form input,
 .report-post-form textarea {
-width:100%;
-font-size:1em;
-padding:5px;
-border-radius:4px;
-border:1px solid #ccc;
+  width: 100%;
+  font-size: 1em;
+  padding: 5px;
+  border-radius: 4px;
+  border: 1px solid #282828;
+  background-color: #282828;
+  color: #ccc;
 }
+
+.report-post-form input:focus,
+.report-post-form textarea:focus {
+  background-color: #2d2d2d;
+}
+
 .report-post-form input:read-only {
-background-color:#f0f0f0 !important;
+  background-color: #f0f0f0 !important;
 }
 #report-post-modal-desc,
 #report-post-modal-msg {
-margin-bottom:0;
-padding-bottom:0;
+  margin-bottom: 0;
+  padding-bottom: 0;
 }
 #report-post-modal-msg {
-display:none;
+  display: none;
 }
 .report-post-error {
-color:red;
+  color: red;
 }
 .report-post-success {
-color:green;
+  color: green;
 }
 .report-post-half-left {
-width: 48% !important;
-float:left !important;
-margin-right:4% !important;
+  width: 48% !important;
+  float: left !important;
+  margin-right: 4% !important;
 }
 .report-post-half-right {
-width: 48% !important;
-float:left !important;
+  width: 48% !important;
+  float: left !important;
+}
+.report-post-half-left,
+.report-post-half-right,
+.report-post-reason {
+  margin-bottom: 20px;
 }
 .report-post-control-error {
-border-color:red !important;
-background-color:#FFE4E1 !important;
+  border-color: red !important;
+  background-color: #ffe4e1 !important;
 }
 .report-user-hidden {
-display:none;
-border:1px solid #eee;
-background-color:#f0f0f0;
-padding:5px;
-margin-bottom:10px;
+  display: none;
+  border: 1px solid #eee;
+  background-color: #f0f0f0;
+  padding: 5px;
+  margin-bottom: 10px;
 }
 .reported_post #post_status,
 .reported_post #post_date {
-width:10%;
+  width: 10%;
 }
 .reported_post #meta_value,
 .reported_post #post_author {
-width:15%;
+  width: 15%;
 }
 /* Highlight effect */
 
 @-webkit-keyframes fadeIt {
-  0%   { background-color: #FFFFFF; }
-  50%  { background-color: lightyellow; }
-  100% { background-color: #FFFFFF; }
+  0% {
+    background-color: #ffffff;
+  }
+  50% {
+    background-color: lightyellow;
+  }
+  100% {
+    background-color: #ffffff;
+  }
 }
 @-moz-keyframes fadeIt {
-  0%   { background-color: #FFFFFF; }
-  50%  { background-color: lightyellow; }
-  100% { background-color: #FFFFFF; }
+  0% {
+    background-color: #ffffff;
+  }
+  50% {
+    background-color: lightyellow;
+  }
+  100% {
+    background-color: #ffffff;
+  }
 }
 @-o-keyframes fadeIt {
-  0%   { background-color: #FFFFFF; }
-  50%  { background-color: lightyellow; }
-  100% { background-color: #FFFFFF; }
+  0% {
+    background-color: #ffffff;
+  }
+  50% {
+    background-color: lightyellow;
+  }
+  100% {
+    background-color: #ffffff;
+  }
 }
 @keyframes fadeIt {
-  0%   { background-color: #FFFFFF; }
-  50%  { background-color: lightyellow; }
-  100% { background-color: #FFFFFF; }
+  0% {
+    background-color: #ffffff;
+  }
+  50% {
+    background-color: lightyellow;
+  }
+  100% {
+    background-color: #ffffff;
+  }
 }
 
 .highlighted {
-    background-image:none !important;
-    -webkit-animation: fadeIt 2s ease-in-out; 
-       -moz-animation: fadeIt 2s ease-in-out; 
-         -o-animation: fadeIt 2s ease-in-out; 
-            animation: fadeIt 2s ease-in-out; 
+  background-image: none !important;
+  -webkit-animation: fadeIt 2s ease-in-out;
+  -moz-animation: fadeIt 2s ease-in-out;
+  -o-animation: fadeIt 2s ease-in-out;
+  animation: fadeIt 2s ease-in-out;
 }
 .wp-report-post-options-table th {
-padding: 10px 10px 10px 0 !important;
-vertical-align:middle;
+  padding: 10px 10px 10px 0 !important;
+  vertical-align: middle;
 }
 .wp-report-post-options-table td {
-padding: 10px 10px !important;
-vertical-align:middle;
+  padding: 10px 10px !important;
+  vertical-align: middle;
 }
-.wp-report-post-options-table input[type=text] {
-width:100%;
+.wp-report-post-options-table input[type="text"] {
+  width: 100%;
 }
 .wp-report-post-options-section {
-border-bottom:1px solid #ccc;
-padding-bottom:10px;
-margin-bottom:10px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 /* ==========================================================================
@@ -160,7 +225,7 @@ margin-bottom:10px;
 /* Default theme styles of the overlay */
 
 .remodal-overlay {
-  background: rgba(43, 46, 56, 0.9);
+  background: rgba(0, 0, 0, 0.5);
 }
 
 .remodal-overlay.remodal-is-opening,
@@ -189,10 +254,18 @@ margin-bottom:10px;
   box-sizing: border-box;
   width: 100%;
   margin-bottom: 10px;
-  padding: 35px;
+  padding: 40px;
   transform: translate3d(0, 0, 0);
-  color: #2b2e38;
-  background: #fff;
+  color: #fff;
+  background: #333333;
+  border-radius: 0.25em;
+
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  border: 1px solid #151515;
+  outline: 0;
+  -webkit-box-shadow: 0 3px 9px rgba(0,0,0,.5);
+  box-shadow: 0 3px 9px rgba(0,0,0,.5);
 }
 
 .remodal.remodal-is-opening,
@@ -220,8 +293,8 @@ margin-bottom:10px;
 
 .remodal-close {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 10px;
+  right: 10px;
 
   display: block;
   overflow: visible;
@@ -235,16 +308,15 @@ margin-bottom:10px;
   transition: color 0.2s;
   text-decoration: none;
 
-  color: #95979c;
-  border: 0;
-  outline: 0;
-  background: transparent;
+  font-size: 20px;
+  font-weight: 800;
+  background: 0 0;
 }
 
-.remodal-close:hover,
+/* .remodal-close:hover,
 .remodal-close:focus {
-  color: #2b2e38;
-}
+  color: #6a6a6a;
+} */
 
 .remodal-close:before {
   font-family: Arial, "Helvetica CY", "Nimbus Sans L", sans-serif !important;
@@ -284,28 +356,33 @@ margin-bottom:10px;
 
   border: 0;
   outline: 0;
+
+  border-radius: 0.25em;
 }
 
-.remodal-confirm {
+/* .remodal-confirm {
   color: #fff;
-  background: #81c784;
+  background: #0f766e;
 }
 
 .remodal-confirm:hover,
 .remodal-confirm:focus {
-  background: #66bb6a;
-  color:yellow;
-}
+  background: #115e59;
+  color: #2dd4bf;
+} */
 
+.remodal-confirm,
 .remodal-cancel {
   color: #fff;
-  background: #e57373;
+  background: #e11d48;
 }
 
+.remodal-confirm:hover,
+.remodal-confirm:focus,
 .remodal-cancel:hover,
 .remodal-cancel:focus {
-  background: #ef5350;
-  color:yellow;
+  background: #be123c;
+  color: #fda4af;
 }
 
 /* Remove inner padding and border in Firefox 4+ for the button tag. */
@@ -365,12 +442,21 @@ margin-bottom:10px;
   }
 }
 
+
+
 /* Media queries
    ========================================================================== */
 
 @media only screen and (min-width: 641px) {
   .remodal {
     max-width: 700px;
+  }
+}
+
+@media (min-width: 768px) {
+  .remodal {
+      -webkit-box-shadow: 0 5px 15px rgba(0,0,0,.5);
+      box-shadow: 0 5px 15px rgba(0,0,0,.5);
   }
 }
 

@@ -8,7 +8,7 @@
  * Author: Alex Raven
  * Company: ESITEQ
  * Version: 2.0
- * Updated 2016-06-12
+ * Updated 2023-12-16
  * Created 2013-09-22
  * Author URI: http://www.esiteq.com/
  * License: GPL3
@@ -30,9 +30,9 @@ class WP_Report_Post_2
         'add_after_option' => 'span.byline',
         'text_report_post' => 'Report Post',
         'text_report_link' => 'Report Post',
-        'text_your_name'   => 'Your Name:',
-        'text_your_email'  => 'Your Email:',
-        'text_your_msg'    => 'Please tell us why do you think this post is inappropriate and shouldn\'t be there:',
+        'text_your_name'   => 'Your Name',
+        'text_your_email'  => 'Your Email',
+        'text_your_msg'    => 'Please tell us why do you think this post is inappropriate and shouldn&#039;t be there',
         'text_cancel'      => 'Cancel',
         'text_submit'      => 'Report',
         'text_post_doesnt_exist' => 'Specified Post does not exist',
@@ -42,15 +42,14 @@ class WP_Report_Post_2
         'text_already_reported' => 'You have already reported this post',
         'text_success'     => 'You have successfully reported inappropriate post',
         'text_error'       => 'Error submitting report',
-        'text_require_login' => 'Please <a href="%s">log in</a> to report posts'
-
+        'text_require_login' => 'Please <a href="%s">log in</a> to report posts',
     );
     var $text_options = array(
         'text_report_link' => 'Link Text',
         'text_report_post' => 'Modal Form Title',
-        'text_your_name'   => 'Your Name:',
-        'text_your_email'  => 'Your Email:',
-        'text_your_msg'    => 'Your Message:',
+        'text_your_name'   => 'Your Name',
+        'text_your_email'  => 'Your Email',
+        'text_your_msg'    => 'Your Message',
         'text_cancel'      => 'Cancel button',
         'text_submit'      => 'Submit button',
         'text_post_doesnt_exist' => 'Invalid Post',
@@ -59,7 +58,7 @@ class WP_Report_Post_2
         'text_msg_invalid'   => 'Invalid Message',
         'text_already_reported' => 'Already reported',
         'text_success'     => 'Successfully reported',
-        'text_error'       => 'Error reporting'
+        'text_error'       => 'Error reporting',
     );
     function enqueue_scripts()
     {
@@ -76,6 +75,16 @@ class WP_Report_Post_2
         return !is_user_logged_in();
     }
     //
+    function get_translation($key)
+    {
+        $translated_text =  __($key, $this->DOMAIN);
+        if ($translated_text !== $key) {
+            return $translated_text;
+        }
+        $value = $this->get_option($key, $this->defaults[$key]);
+        return $value;
+    }
+    //
     function footer_scripts()
     {
         $report_post_name_val = '';
@@ -89,137 +98,145 @@ class WP_Report_Post_2
         <div class="remodal" data-remodal-id="report-post" role="dialog" aria-labelledby="report-post-modal-title" aria-describedby="report-post-modal-desc">
             <a data-remodal-action="close" class="remodal-close" aria-label="Close"></a>
             <div>
-                <h2 id="report-post-modal-title"><?php echo $this->get_option('text_report_post', $this->defaults['text_report_post']); ?></h2>
+                <h2 id="report-post-modal-title"><?php echo $this->get_translation('text_report_post'); ?></h2>
                 <p id="report-post-modal-desc">
-                    <?php if ($this->not_logged_in()) {
-                    ?>
-                        <?php echo $this->get_option(sprintf('text_require_login', wp_login_url()), sprintf($this->defaults['text_require_login'], wp_login_url())); ?>
-                    <?php
-                    } else {
-                    ?>
-                        &laquo;<b><span id="report-post-title">&nbsp;</span></b>&raquo;
-                    <?php } ?>
+                    <?php if ($this->not_logged_in()) : ?>
+                        <span id="report-post-require-login-msg">
+                            <?php echo sprintf($this->get_translation('text_require_login'), wp_login_url()); ?>
+                        </span>
+                    <?php else : ?>
+                        <!-- display post title -->
+                        <!-- &laquo;<b><span id="report-post-title">&nbsp;</span></b>&raquo; -->
+                    <?php endif; ?>
                 </p>
-                <?php if (!$this->not_logged_in()) { ?>
+                <?php if (!$this->not_logged_in()) : ?>
                     <p id="report-post-modal-msg">&nbsp;</p>
                     <form class="report-post-form" id="report-post-form">
                         <input type="hidden" name="subaction" value="report-post" />
                         <input type="hidden" name="report_post_id" id="report-post-id" value="0" />
-                        <div class="report-post-half-left">
-                            <p><?php echo $this->get_option('text_your_name', $this->defaults['text_your_name']); ?></p>
-                            <input class="report-post-control" id="report_post_name" name="report_post_name" <?php echo $report_post_name_val; ?> />
-                        </div>
-                        <div class="report-post-half-right">
-                            <p><?php echo $this->get_option('text_your_email', $this->defaults['text_your_email']); ?></p>
-                            <input class="report-post-control" id="report_post_email" name="report_post_email" <?php echo $report_post_email_val; ?> />
-                        </div>
-                        <div style="clear: both;"></div>
-                        <div>
-                            <p><?php echo $this->get_option('text_your_msg', $this->defaults['text_your_msg']); ?></p>
+                        <?php if (!is_user_logged_in()) : ?>
+                            <div class="report-post-half-left">
+                                <label><?php echo $this->get_translation('text_your_name'); ?></label>
+                                <input class="report-post-control" id="report_post_name" name="report_post_name" <?php echo $report_post_name_val; ?> />
+                            </div>
+                            <div class="report-post-half-right">
+                                <label><?php echo $this->get_translation('text_your_email'); ?></label>
+                                <input class="report-post-control" id="report_post_email" name="report_post_email" <?php echo $report_post_email_val; ?> />
+                            </div>
+                            <div style="clear: both;"></div>
+                        <?php endif; ?>
+                        <div class="report-post-reason">
+                            <label><?php echo $this->get_translation('text_your_msg'); ?></label>
                             <textarea class="report-post-control" rows="5" id="report_post_msg" name="report_post_msg"></textarea>
                         </div>
                     </form>
-                <?php } ?>
+                <?php endif; ?>
             </div>
-            <?php if (!$this->not_logged_in()) { ?>
+            <?php if (!$this->not_logged_in()) : ?>
                 <div id="report-post-buttons">
-                    <br />
-                    <a data-remodal-action="cancel" class="remodal-cancel"><?php echo $this->get_option('text_cancel', $this->defaults['text_cancel']); ?></a>
-                    <a id="report-post-submit" class="remodal-confirm"><?php echo $this->get_option('text_submit', $this->defaults['text_submit']); ?></a>
+                    <a id="report-post-submit" class="remodal-confirm"><?php echo $this->get_translation('text_submit'); ?></a>
+                    <!-- <a data-remodal-action="cancel" class="remodal-cancel"><?php echo $this->get_translation('text_cancel'); ?></a> -->
                 </div>
-            <?php } ?>
+            <?php endif; ?>
         </div>
 
         <script type="text/javascript">
-            jQuery(document).ready(function($) {
-                window.REMODAL_GLOBALS = {
-                    NAMESPACE: 'report-post',
-                    DEFAULTS: {
+            function init() {
+                jQuery(document).ready(function($) {
+                    window.REMODAL_GLOBALS = {
+                        NAMESPACE: 'report-post',
+                        DEFAULTS: {
+                            hashTracking: false,
+                            closeOnConfirm: false
+                        }
+                    }
+                    // add after
+                    <?php if ($this->get_option('add_what', $this->defaults['add_what_option']) != '') : ?>
+                        var report_post_link = '<a href="#" class="report-post-<?php echo $this->get_option('add_what', $this->defaults['add_what_option']); ?>"><?php echo esc_js($this->get_option('text_report_link', $this->defaults['text_report_link'])); ?></a>';
+                        $('<?php echo esc_js($this->get_option('add_after', $this->defaults['add_after_option'])); ?>').after(report_post_link);
+                    <?php endif; ?>
+                    var _remodal = $('[data-remodal-id=report-post]').remodal({
+                        modifier: 'with-red-theme',
                         hashTracking: false,
                         closeOnConfirm: false
-                    }
-                }
-                // add after
-                <?php
-                if ($this->get_option('add_what', $this->defaults['add_what_option']) != '') {
-                ?>
-                    var report_post_link = '<a href="#" class="report-post-<?php echo $this->get_option('add_what', $this->defaults['add_what_option']); ?>"><?php echo esc_js($this->get_option('text_report_link', $this->defaults['text_report_link'])); ?></a>';
-                    $('<?php echo esc_js($this->get_option('add_after', $this->defaults['add_after_option'])); ?>').after(report_post_link);
-                <?php
-                }
-                ?>
-                var _remodal = $('[data-remodal-id=report-post]').remodal({
-                    modifier: 'with-red-theme',
-                    hashTracking: false,
-                    closeOnConfirm: false
-                });
-                $(document).on('opened', '.remodal', function() {
-                    $('#report-post-buttons').slideDown(1000);
-                    $('#report-post-form').slideDown(1000, function() {
-                        if ($('#report_post_name').val() == '') {
-                            $('#report_post_name').focus();
-                        } else {
-                            $('#report_post_msg').focus();
-                        }
                     });
-                });
-                $('#report-post-submit').click(function(e) {
-                    e.preventDefault();
-                    $('#report-post-modal-desc').css('display', 'block');
-                    $('#report-post-modal-msg').css('display', 'none');
-                    $('.report-post-control').removeClass('report-post-control-error');
-                    //_remodal.close();
-                    $.post('<?php echo admin_url('admin-ajax.php'); ?>?action=wp_report_post', $('#report-post-form').serialize(), function(data) {
-                        if (data.errmsg) {
-                            $('#report-post-modal-desc').css('display', 'none');
-                            $('#report-post-modal-msg').css('display', 'block');
-                            $('#report-post-modal-msg').html(data.errmsg);
-                            $('#report-post-modal-msg').addClass('report-post-error');
-                            $('#report-post-modal-msg').removeClass('report-post-success');
-                            if (data.field) {
-                                $('#' + data.field).addClass('report-post-control-error');
-                                $('#' + data.field).focus();
+                    $(document).on('opened', '.remodal', function() {
+                        $('#report-post-buttons').slideDown(1000);
+                        $('#report-post-form').slideDown(1000, function() {
+                            if ($('#report_post_name').val() == '') {
+                                $('#report_post_name').focus();
                             } else {
                                 $('#report_post_msg').focus();
                             }
-                        }
-                        if (data.msg) {
-                            $('#report-post-modal-desc').css('display', 'none');
-                            $('#report-post-modal-msg').css('display', 'block');
-                            $('#report-post-modal-msg').html(data.msg);
-                            $('#report-post-modal-msg').removeClass('report-post-error');
-                            $('#report-post-modal-msg').addClass('report-post-success');
-                            $('#report_post_msg').val('');
-                            $('#report-post-form').slideUp(1000);
-                            $('#report-post-buttons').slideUp(1000);
-                        }
-                    }, 'json');
+                        });
+                    });
+                    $('#report-post-submit').click(function(e) {
+                        e.preventDefault();
+                        $('#report-post-modal-desc').css('display', 'block');
+                        $('#report-post-modal-msg').css('display', 'none');
+                        $('.report-post-control').removeClass('report-post-control-error');
+                        //_remodal.close();
+                        $.post('<?php echo admin_url('admin-ajax.php'); ?>?action=wp_report_post', $('#report-post-form').serialize(), function(data) {
+                            if (data.errmsg) {
+                                $('#report-post-modal-desc').css('display', 'none');
+                                $('#report-post-modal-msg').css('display', 'block');
+                                $('#report-post-modal-msg').html(data.errmsg);
+                                $('#report-post-modal-msg').addClass('report-post-error');
+                                $('#report-post-modal-msg').removeClass('report-post-success');
+                                if (data.field) {
+                                    $('#' + data.field).addClass('report-post-control-error');
+                                    $('#' + data.field).focus();
+                                } else {
+                                    $('#report_post_msg').focus();
+                                }
+                            }
+                            if (data.msg) {
+                                $('#report-post-modal-desc').css('display', 'none');
+                                $('#report-post-modal-msg').css('display', 'block');
+                                $('#report-post-modal-msg').html(data.msg);
+                                $('#report-post-modal-msg').removeClass('report-post-error');
+                                $('#report-post-modal-msg').addClass('report-post-success');
+                                $('#report_post_msg').val('');
+                                $('#report-post-form').slideUp(1000);
+                                $('#report-post-buttons').slideUp(1000);
+                            }
+                        }, 'json');
 
-                });
-                $('.report-post-link,.report-post-button,.report-post-custom-link,.report-post-custom-button').click(function(e) {
-                    e.preventDefault();
-                    $('#report-post-modal-desc').css('display', 'block');
-                    $('#report-post-modal-msg').css('display', 'none');
-                    $('.report-post-control').removeClass('report-post-control-error');
-                    var post_id = 0;
-                    if ($(this).attr('post-id') != undefined) {
-                        post_id = parseInt($(this).attr('post-id'));
-                    } else {
-                        var article_id = $(this).closest('article').attr('id');
-                        if (article_id != undefined) {
-                            var post_id = parseInt(article_id.replace(/^\D+/g, ''));
+                    });
+                    $('.report-post-link,.report-post-button,.report-post-custom-link,.report-post-custom-button').click(function(e) {
+                        e.preventDefault();
+                        $('#report-post-modal-desc').css('display', 'block');
+                        $('#report-post-modal-msg').css('display', 'none');
+                        $('.report-post-control').removeClass('report-post-control-error');
+                        var post_id = 0;
+                        if ($(this).attr('post-id') != undefined) {
+                            post_id = parseInt($(this).attr('post-id'));
+                        } else {
+                            var article_id = $(this).closest('article').attr('id');
+                            if (article_id != undefined) {
+                                var post_id = parseInt(article_id.replace(/^\D+/g, ''));
 
+                            }
                         }
-                    }
-                    $('#report-post-id').val(post_id);
-                    $.post('<?php echo admin_url('admin-ajax.php'); ?>?action=wp_report_post', {
-                        subaction: 'get-post',
-                        post_id: post_id
-                    }, function(data) {
-                        $('#report-post-title').html(data.post_title);
-                        _remodal.open();
-                    }, 'json');
+                        $('#report-post-id').val(post_id);
+                        $.post('<?php echo admin_url('admin-ajax.php'); ?>?action=wp_report_post', {
+                            subaction: 'get-post',
+                            post_id: post_id
+                        }, function(data) {
+                            $('#report-post-title').html(data.post_title);
+                            _remodal.open();
+                        }, 'json');
+                    });
                 });
+            }
+
+            // Create a script tag and insert the init into the document
+            // after the DOM content has loaded
+            // to make sure the script runs after jQuery is loaded
+            document.addEventListener('DOMContentLoaded', function() {
+                var script = document.createElement('script');
+                script.innerHTML = 'init();';
+                document.head.appendChild(script);
             });
         </script>
     <?php
@@ -229,6 +246,73 @@ class WP_Report_Post_2
     {
         add_menu_page(__('Reported Posts', $this->DOMAIN), __('Reported Posts', $this->DOMAIN), 'edit_others_posts', 'wp-report-post', array($this, 'reported_posts'), 'dashicons-megaphone');
         add_submenu_page('wp-report-post', __('Options', $this->DOMAIN), __('Options', $this->DOMAIN), 'edit_others_posts', 'wp-report-post-options', array($this, 'options_page'));
+        add_filter('add_menu_classes', array($this, 'show_report_pending_number'));
+    }
+    //
+    function get_translation_content($pot_format): string
+    {
+        $id_list = array(
+            'text_report_post',
+            'text_report_link',
+            'text_your_name',
+            'text_your_email',
+            'text_your_msg',
+            'text_cancel',
+            'text_submit',
+            'text_post_doesnt_exist',
+            'text_email_invalid',
+            'text_name_invalid',
+            'text_msg_invalid',
+            'text_already_reported',
+            'text_success',
+            'text_error',
+            'text_require_login',
+        );
+
+        // if add_what_option is set to "Nothing", don't include text_report_link
+        if ($this->get_option('add_what', $this->defaults['add_what_option']) == '') {
+            foreach ($id_list as $key => $value) {
+                if ($value == 'text_report_link') {
+                    unset($id_list[$key]);
+                }
+            }
+        }
+
+        $pot_content = '';
+        foreach ($id_list as $id) {
+            $pot_content .= '#. ' . $this->DOMAIN . "\n";
+            $pot_content .= '#: wp-report-post-2/wp-report-post.php' . "\n";
+            $pot_content .= 'msgid "' . $id . '"' . "\n";
+            if ($pot_format) {
+                $pot_content .= 'msgstr ""' . "\n\n";
+            } else {
+                $pot_content .= 'msgstr "' . $this->get_translation($id) . '"' . "\n\n";
+            }
+        }
+
+        return esc_js($pot_content);
+    }
+    //
+    function get_report_count()
+    {
+        global $wpdb;
+        $sql_count = $wpdb->prepare("SELECT COUNT(*) FROM {$wpdb->postmeta} LEFT JOIN {$wpdb->posts} ON {$wpdb->postmeta}.post_id={$wpdb->posts}.ID WHERE meta_key='_wp_report_post'", 1);
+        return $wpdb->get_var($sql_count);
+    }
+    //
+    function show_report_pending_number($menu)
+    {
+        //ref: https://wordpress.stackexchange.com/questions/3920/modifying-admin-sidebar-contents-to-show-pending-posts-indicator
+        $menu_str = $this->DOMAIN;
+
+        $pending_count = $this->get_report_count();
+
+        foreach ($menu as $menu_key => $menu_data) {
+            if ($menu_str != $menu_data[2])
+                continue;
+            $menu[$menu_key][0] .= " <span class='update-plugins count-$pending_count'><span class='plugin-count'>" . number_format_i18n($pending_count) . '</span></span>';
+        }
+        return $menu;
     }
     //
     function reported_posts()
@@ -313,20 +397,33 @@ class WP_Report_Post_2
                 </table>
                 <h2 class="wp-report-post-options-section"><?php _e('Texts', $this->DOMAIN); ?></h2>
                 <table class="form-table wp-report-post-options-table">
-                    <?php
-                    foreach ($this->text_options as $key => $value) {
-                    ?>
+                    <?php foreach ($this->text_options as $key => $value) : ?>
                         <tr>
                             <th scope="row"><?php echo $value; ?></th>
                             <td><?php $this->input($key, $this->get_option($key, $this->defaults[$key])); ?></td>
                         </tr>
-                    <?php
-                    }
-                    ?>
+                    <?php endforeach; ?>
                 </table>
-                <p class="submit">
-                    <input type="submit" class="button-primary" value="<?php _e('Save Options', $this->DOMAIN); ?>" />
-                </p>
+                <button type="submit" class="button-primary"><?php _e('Save Options', $this->DOMAIN); ?></button>
+                <button type="button" class="button" onclick="reset_to_default()"><?php _e('Reset to Default', $this->DOMAIN); ?></button>
+                <!-- Translation Shortcut -->
+                <h2 class="wp-report-post-options-section">
+                    <?php _e('Translation Shortcut', $this->DOMAIN); ?>
+                    <span style="font:small-caption;">(Requires browser clipboard write permission)</span>
+                </h2>
+                <div>
+                    <button onclick="copy_translation_content()" class="button">
+                        Copy in PO Format
+                    </button>
+                    <span style="font:small-caption;">(including both 'msgid' and 'msgstr')</span>
+                </div>
+                <br>
+                <div>
+                    <button onclick="copy_translation_content(true)" class="button">
+                        Copy in POT Format
+                    </button>
+                    <span style="font:small-caption;">(not including 'msgstr')</span>
+                </div>
             </form>
         </div>
     <?php
@@ -363,22 +460,22 @@ class WP_Report_Post_2
             $reporter_msg = sanitize_text_field($_POST['report_post_msg']);
             $post = get_post($report_post_id);
             if (!$post) {
-                echo json_encode(array('errmsg' => $this->get_option('text_post_doesnt_exist', $this->defaults['text_post_doesnt_exist']), 'field' => ''));
+                echo json_encode(array('errmsg' => $this->get_translation('text_post_doesnt_exist'), 'field' => ''));
                 die();
             }
             $json['post'] = $post;
             if (!filter_var($reporter_email, FILTER_VALIDATE_EMAIL) === false) {
                 //
             } else {
-                echo json_encode(array('errmsg' => $this->get_option('text_email_invalid', $this->defaults['text_email_invalid']), 'field' => 'report_post_email'));
+                echo json_encode(array('errmsg' => $this->get_translation('text_email_invalid'), 'field' => 'report_post_email'));
                 die();
             }
             if (strlen($reporter_name) < 2) {
-                echo json_encode(array('errmsg' => $this->get_option('text_name_invalid', $this->defaults['text_name_invalid']), 'field' => 'report_post_name'));
+                echo json_encode(array('errmsg' => $this->get_translation('text_name_invalid'), 'field' => 'report_post_name'));
                 die();
             }
             if (strlen($reporter_msg) < 16) {
-                echo json_encode(array('errmsg' => $this->get_option('text_msg_invalid', $this->defaults['text_msg_invalid']), 'field' => 'report_post_msg'));
+                echo json_encode(array('errmsg' => $this->get_translation('text_msg_invalid'), 'field' => 'report_post_msg'));
                 die();
             }
             $data = array('user_id' => get_current_user_id(), 'email' => $reporter_email, 'name' => $reporter_name, 'msg' => $reporter_msg, 'post_id' => $report_post_id);
@@ -386,7 +483,7 @@ class WP_Report_Post_2
             if (is_array($reports)) {
                 foreach ($reports as $report) {
                     if ($report['email'] == $reporter_email) {
-                        echo json_encode(array('errmsg' => $this->get_option('text_already_reported', $this->defaults['text_already_reported']), 'field' => 'report_post_msg'));
+                        echo json_encode(array('errmsg' => $this->get_translation('text_already_reported'), 'field' => 'report_post_msg'));
                         die();
                     }
                 }
@@ -397,10 +494,10 @@ class WP_Report_Post_2
             }
             $meta_id = update_post_meta($report_post_id, '_wp_report_post', $reports);
             if ($meta_id) {
-                echo json_encode(array('msg' => $this->get_option('text_success', $this->defaults['text_success']), 'field' => '', 'meta_id' => $meta_id, 'reports' => $reports));
+                echo json_encode(array('msg' => $this->get_translation('text_success'), 'field' => '', 'meta_id' => $meta_id, 'reports' => $reports));
                 die();
             } else {
-                echo json_encode(array('errmsg' => $this->get_option('text_error', $this->defaults['text_error']), 'field' => ''));
+                echo json_encode(array('errmsg' => $this->get_translation('text_error'), 'field' => ''));
                 die();
             }
         }
@@ -428,6 +525,71 @@ class WP_Report_Post_2
             <a id="remodal-confirm-submit" href="#" class="remodal-confirm">Confirm</a>
         </div>
         <script>
+            jQuery(function($) {
+                // hide #text_report_link and #add_after's tr if add_what is set to "Nothing"
+                const add_what = $('[name="add_what"]');
+                const text_report_link = $('#text_report_link').closest('tr');
+                const add_after = $('#add_after').closest('tr');
+                
+                function update() {
+                    if (add_what.val() == '') {
+                        text_report_link.hide();
+                        add_after.hide();
+                    } else {
+                        text_report_link.show();
+                        add_after.show();
+                    }
+                }
+                
+                add_what.change(update);
+                update();
+            })
+
+            function reset_to_default() {
+                event.preventDefault();
+                // Set variables back to their default values
+                <?php foreach ($this->defaults as $key => $value) :
+                    switch ($key) {
+                        case "add_after_option":
+                            $key = "add_after";
+                            break;
+                    }
+                    ?>
+                    if ("<?php echo $key; ?>" == "add_what_options") {
+                        dropdown = jQuery("[name='add_what']");
+                        // set default value, set selected to option
+                        dropdown.val('<?php echo $this->defaults['add_what_option']; ?>');
+                    } else if ("<?php echo $key; ?>" == "require_login") {
+                        checkbox = jQuery("[name='require_login']");
+                        // set default value, set checked to checkbox
+                        checkbox.prop('checked', <?php echo $this->defaults['require_login']; ?>);
+                    } else {
+                        jQuery('#<?php echo $key; ?>').val('<?php echo $value; ?>');
+                    }
+                <?php endforeach; ?>
+                alert("You have to click 'Save Options' to save the changes.");
+            }
+
+            function copy_translation_content(pot_format = false) {
+                event.preventDefault();
+
+                if (pot_format) {
+                    tran_content = `<?php echo $this->get_translation_content(true); ?>`;
+                } else {
+                    tran_content = `<?php echo $this->get_translation_content(false); ?>`;
+                }
+
+                // restore escaped characters
+                tran_content = tran_content.replace(/&lt;/g, '<');
+                tran_content = tran_content.replace(/&gt;/g, '>');
+                tran_content = tran_content.replace(/&quot;/g, '"');
+                // tran_content = tran_content.replace(/&#039;/g, "'");
+                tran_content = tran_content.replace(/&amp;/g, '&');
+
+                navigator.clipboard.writeText(tran_content);
+                alert("Copied to clipboard: \n" + tran_content);
+            }
+
             var _remodal_confirm;
 
             function getQueryParams(qs) {
@@ -582,7 +744,7 @@ class WP_Report_Post_List extends WP_List_Table
         return sprintf(
             '%1$s %2$s',
             /*$1%s*/
-            sprintf('<a href="%s" title="View post in new tab" target="_blank">%s</a>', get_post_permalink($item['post_id']), $item['post_title']),
+            sprintf('<a href="%s" title="View post in new tab" target="_blank">%s</a>', get_post_permalink($item['post_id']), try_wpm_translate_string($item['post_title'])),
             /*$2%s*/
             $this->row_actions($actions)
         );
@@ -691,11 +853,9 @@ class WP_Report_Post_List extends WP_List_Table
             'posts_per_page' => 5,
             'offset' => 0
         );
-        $sql_count = $wpdb->prepare("SELECT COUNT(*) FROM {$wpdb->postmeta} LEFT JOIN {$wpdb->posts} ON {$wpdb->postmeta}.post_id={$wpdb->posts}.ID WHERE meta_key='_wp_report_post'", 1);
         $sql = $wpdb->prepare("SELECT * FROM {$wpdb->postmeta} LEFT JOIN {$wpdb->posts} ON {$wpdb->postmeta}.post_id={$wpdb->posts}.ID WHERE meta_key='_wp_report_post' ORDER BY {$orderby} {$order} LIMIT %d,%d", $start, $per_page);
-        //echo $sql, '<hr>';
         $data = $wpdb->get_results($sql, ARRAY_A);
-        $total_items = $wpdb->get_var($sql_count);
+        $total_items = $this->get_report_count();
         $this->items = $data;
         $this->set_pagination_args(array(
             'total_items' => $total_items,
@@ -706,4 +866,19 @@ class WP_Report_Post_List extends WP_List_Table
 }
 
 $_wp_report_post_2 = new WP_Report_Post_2;
+
+/**
+ * Try to use wpm_translate_string function to translate the text if the function exists.
+ * 
+ * @param string $text The text to translate.
+ * 
+ * @return string The translated text if the function exists, otherwise the original text.
+ */
+function try_wpm_translate_string($text)
+{
+    if (function_exists('wpm_translate_string')) {
+        return wpm_translate_string($text);
+    }
+    return $text;
+}
 ?>
