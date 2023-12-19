@@ -296,7 +296,7 @@ class WP_Report_Post_2
     function get_report_count()
     {
         global $wpdb;
-        $sql_count = $wpdb->prepare("SELECT COUNT(*) FROM {$wpdb->postmeta} LEFT JOIN {$wpdb->posts} ON {$wpdb->postmeta}.post_id={$wpdb->posts}.ID WHERE meta_key='_wp_report_post'", 1);
+        $sql_count = $wpdb->prepare("SELECT COUNT(*) FROM {$wpdb->postmeta} LEFT JOIN {$wpdb->posts} ON {$wpdb->postmeta}.post_id={$wpdb->posts}.ID WHERE meta_key='%s'", '_wp_report_post');
         return $wpdb->get_var($sql_count);
     }
     //
