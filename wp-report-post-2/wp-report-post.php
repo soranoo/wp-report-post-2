@@ -530,7 +530,7 @@ class WP_Report_Post_2
                 const add_what = $('[name="add_what"]');
                 const text_report_link = $('#text_report_link').closest('tr');
                 const add_after = $('#add_after').closest('tr');
-                
+
                 function update() {
                     if (add_what.val() == '') {
                         text_report_link.hide();
@@ -540,7 +540,7 @@ class WP_Report_Post_2
                         add_after.show();
                     }
                 }
-                
+
                 add_what.change(update);
                 update();
             })
@@ -554,7 +554,7 @@ class WP_Report_Post_2
                             $key = "add_after";
                             break;
                     }
-                    ?>
+                ?>
                     if ("<?php echo $key; ?>" == "add_what_options") {
                         dropdown = jQuery("[name='add_what']");
                         // set default value, set selected to option
@@ -564,7 +564,11 @@ class WP_Report_Post_2
                         // set default value, set checked to checkbox
                         checkbox.prop('checked', <?php echo $this->defaults['require_login']; ?>);
                     } else {
-                        jQuery('#<?php echo $key; ?>').val('<?php echo $value; ?>');
+                        <?php
+                        $key_output = is_array($key) ? $key[0] : $key;
+                        $value_output = is_array($value) ? implode(', ', $value) : $value;
+                        ?>
+                        jQuery('#<?php echo $key_output; ?>').val('<?php echo $value_output; ?>');
                     }
                 <?php endforeach; ?>
                 alert("You have to click 'Save Options' to save the changes.");
